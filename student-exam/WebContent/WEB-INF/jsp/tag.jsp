@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<li style="padding-top:8px;">
+				<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-user"></i> ${sessionScope.LOGIN_Manager.loginacct } <span class="caret"></span>
+				  </button>
+					  <ul class="dropdown-menu" role="menu">
+						<li><a href="javascript:void(0);" onclick="resetPass()"><i class="glyphicon glyphicon-cog"></i> 修改密码</a></li>					
+						<li class="divider"></li>
+						<li><a href="${APP_PATH }/logout.do"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+					  </ul>
+			    </div>
+			</li>
+            <!-- <li style="margin-left:10px;padding-top:8px;">
+				<button type="button" class="btn btn-default btn-danger">
+				  <span class="glyphicon glyphicon-question-sign"></span> 帮助
+				</button> 
+					</li>-->

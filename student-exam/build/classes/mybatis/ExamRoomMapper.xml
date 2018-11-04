@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.dao.ExamRoomMapper" >
+  <resultMap id="BaseResultMap" type="com.student.bean.ExamRoom" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="typeid" property="typeid" jdbcType="INTEGER" />
+    <result column="typename" property="typename" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_exam_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.student.bean.ExamRoom" >
+    insert into t_exam_room (id, address, date, 
+      note, typeid, typename
+      )
+    values (#{id,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{typeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.student.bean.ExamRoom" >
+    update t_exam_room
+    set address = #{address,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      typeid = #{typeid,jdbcType=INTEGER},
+      typename = #{typename,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, address, date, note, typeid, typename
+    from t_exam_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, address, date, note, typeid, typename
+    from t_exam_room
+  </select>
+  
+      <select id="querypage" resultMap="BaseResultMap">
+  		 select id, address, date, note, typeid, typename
+    		from t_exam_room 
+    		<where>
+    			<if test="queryText != null">
+    				typename like concat("%",#{queryText},"%")
+    			</if>
+    		</where> 
+    		limit #{startIndex},#{pagesize}
+  	</select>
+  	
+  	<select id="queryCount" resultType="int">
+  		 select count(*) from t_exam_room 
+  		 	<where>
+    			<if test="queryText != null">
+    				typename like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+  	</select>
+    
+  <update id="updateExamRoom" parameterType="com.student.bean.ExamRoom" >
+    update t_exam_room
+    	set address = #{address,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}    
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   
+</mapper>

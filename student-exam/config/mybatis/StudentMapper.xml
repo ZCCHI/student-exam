@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.dao.StudentMapper" >
+  <resultMap id="BaseResultMap" type="com.student.bean.Student" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="loginacct" property="loginacct" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="cardid" property="cardid" jdbcType="VARCHAR" />
+    <result column="stutas" property="stutas" jdbcType="CHAR" />
+    <result column="createtime" property="createtime" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.student.bean.Student" >
+    insert into t_student (id, loginacct, password, 
+      email, name, realname, 
+      cardid, stutas, createtime
+      )
+    values (#{id,jdbcType=INTEGER}, #{loginacct,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{cardid,jdbcType=VARCHAR}, #{stutas,jdbcType=CHAR}, #{createtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.student.bean.Student" >
+    update t_student
+    set loginacct = #{loginacct,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      realname = #{realname,jdbcType=VARCHAR},
+      cardid = #{cardid,jdbcType=VARCHAR},
+      stutas = #{stutas,jdbcType=CHAR},
+      createtime = #{createtime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, loginacct, password, email, name, realname, cardid, stutas, createtime
+    from t_student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, loginacct, password, email, name, realname, cardid, stutas, createtime
+    from t_student
+  </select>
+  
+  
+  <insert id="saveStudent" parameterType="com.student.bean.Student" >
+    insert into t_student (loginacct, password, 
+      email, name,createtime
+      )
+    values (#{loginacct,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
+  <select id="queryLoginStudent" resultMap="BaseResultMap"  parameterType="com.student.bean.Student" >
+    select id, loginacct, password, email, name, realname, cardid, stutas, createtime
+    from t_student
+    where loginacct = #{loginacct} and password = #{password}
+  </select>
+  
+  <select id="queryExistLoginacct" resultMap="BaseResultMap"  parameterType="com.student.bean.Student" >
+    select id, loginacct 
+    from t_student
+    where loginacct = #{loginacct}
+  </select>
+  
+  <select id="queryPage" resultMap="BaseResultMap">
+  		 select id, loginacct, email, name, createtime
+    		from t_student 
+    		<where>
+    			<if test="queryText != null">
+    				name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+    		order by id desc 
+    		limit #{startIndex},#{pagesize}
+  	</select>
+  	
+  	<select id="queryCount" resultType="int">
+  		 select count(*) from t_student 
+  		 	<where>
+    			<if test="queryText != null">
+    				name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+  	</select>
+  
+    <update id="updateStudentPassword" parameterType="com.student.bean.Student">
+  	update t_student 
+	  	set password = #{password,jdbcType=VARCHAR}
+	  	where loginacct = #{loginacct}
+  </update>
+  
+    <update id="updateStudentInfo" parameterType="com.student.bean.Student">
+  		update t_student 
+		  	set realname = #{realname,jdbcType=VARCHAR},
+			      cardid = #{cardid,jdbcType=VARCHAR},
+			      stutas = #{stutas,jdbcType=CHAR}
+		  	where id = #{id}
+  </update>
+  
+  <select id="querybiaomingage" resultType="com.student.bean.BiaoMing">
+  select t_student.name,t_student.loginacct,t_type.type,t_student.realname,t_type.pid,t_student_type.baotime,t_student_type.status,t_student.cardid,t_student.name,t_student_type.mark,t_student_type.id from t_student_type,t_type ,t_student
+			<where>		
+    			<if test="1 == 1">
+    				 t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+						and  t_student_type.status = '1'
+    			</if>
+    			<if test="queryText != null">
+    				and t_student.name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>	  		
+    	
+    		order by t_student_type.id desc
+    		limit #{startIndex},#{pagesize}
+  	</select>
+  	
+  	<select id="querybiaomingCount" resultType="int">
+  		 select count(*) from t_student_type,t_type ,t_student
+			<where>		
+    			<if test="1 == 1">
+    				 t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+						and  t_student_type.status = '1'
+    			</if>
+    			<if test="queryText != null">
+    				and  t_student.name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>	  		
+    		
+  	</select>
+  
+  
+   <select id="queryGradegage" resultType="com.student.bean.BiaoMing">
+  select t_student_type.time,t_student.name,t_student.loginacct,t_type.type,t_student.realname,t_type.pid,t_student_type.baotime,t_student_type.status,t_student.cardid,t_student.name,t_student_type.mark,t_student_type.id from t_student_type,t_type ,t_student   		
+    		<where>
+    			<if test="1 == 1">   				
+    				t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+						and t_student_type.status = '2'
+    			</if>
+    			<if test="queryText != null">
+    				and t_student.name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+    		order by t_student_type.id desc
+    		limit #{startIndex},#{pagesize}
+  	</select>
+  	
+  	<select id="queryGradeCount" resultType="int">
+  		 select count(*) from t_student_type,t_type ,t_student 
+  		 	<where>
+    			<if test="1 == 1">   				
+    				t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+						and t_student_type.status = '2'
+    			</if>
+    			<if test="queryText != null">
+    				and t_student.name like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+  	</select>
+  	
+  	
+ <!-- Student queryByEmail(Student student); -->
+  <select id="queryByEmail" resultMap="BaseResultMap" parameterType="com.student.bean.Student">
+  	select id, loginacct, password, email, name, realname, cardid, stutas, createtime
+    from t_student
+    where loginacct = #{loginacct} and email = #{email}
+  </select>
+  	
+  
+</mapper>

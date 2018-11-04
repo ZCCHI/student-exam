@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.dao.StudentTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.student.bean.StudentType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stuid" property="stuid" jdbcType="INTEGER" />
+    <result column="typeid" property="typeid" jdbcType="INTEGER" />
+    <result column="mark" property="mark" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="baotime" property="baotime" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_student_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.student.bean.StudentType" >
+    insert into t_student_type (id, stuid, typeid, 
+      mark, status, time, baotime
+      )
+    values (#{id,jdbcType=INTEGER}, #{stuid,jdbcType=INTEGER}, #{typeid,jdbcType=INTEGER}, 
+      #{mark,jdbcType=INTEGER}, #{status,jdbcType=CHAR}, #{time,jdbcType=VARCHAR}, #{baotime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.student.bean.StudentType" >
+    update t_student_type
+    set stuid = #{stuid,jdbcType=INTEGER},
+      typeid = #{typeid,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      time = #{time,jdbcType=VARCHAR},
+      baotime = #{baotime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, stuid, typeid, mark, status, time, baotime
+    from t_student_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, stuid, typeid, mark, status, time, baotime
+    from t_student_type
+  </select>
+   
+   
+   <insert id="saveStudentType" parameterType="com.student.bean.StudentType" >
+    insert into t_student_type (stuid, typeid, 
+      status, baotime
+      )
+    values (#{stuid,jdbcType=INTEGER}, #{typeid,jdbcType=INTEGER}, 
+       #{status,jdbcType=CHAR}, #{baotime,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <select id="getBiaoMingId" resultType="int" >
+      select max(id) id from t_student_type;
+  </select>
+  
+  <select id="getBiaoMingInfo" parameterType="int" resultType="com.student.bean.BiaoMing"  >
+      select t_type.type,t_student.realname,t_student.cardid,t_type.pid from t_student_type,t_type ,t_student
+		where t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+		and t_student_type.id = #{id}
+  </select>
+  
+  
+  <select id="queryBaoMingInfo" parameterType="int" resultType="map" >
+      select t_student_type.id,t_type.type,t_student.realname,t_type.pid,t_student_type.baotime,t_student_type.status from t_student_type,t_type ,t_student
+		where t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+			and t_student_type.stuid = #{id} and t_student_type.status = '1'
+  </select>
+  
+  
+  <update id="saveStudentGrade" parameterType="com.student.bean.StudentType" >
+    update t_student_type
+    set 
+      mark = #{mark,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      time = #{time,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+    <select id="queryGradeStuInfo" parameterType="int" resultType="map" >
+        select t_student_type.id,t_student_type.mark,t_type.type,t_type.pid,t_student_type.baotime,t_student_type.status from t_student_type,t_type ,t_student
+		where t_type.id = t_student_type.typeid and t_student.id = t_student_type.stuid
+			and t_student_type.stuid =  #{id} and t_student_type.status = '2'
+  </select>
+  
+    <select id="getStudentType" resultMap="BaseResultMap"  >
+        select id, stuid, typeid, mark, status, time, baotime
+    		from t_student_type  where stuid = #{stuid} and typeid = #{typeid}
+  </select>
+  
+     
+
+  
+</mapper>

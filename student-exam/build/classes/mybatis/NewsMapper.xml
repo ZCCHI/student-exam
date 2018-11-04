@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.dao.NewsMapper" >
+  <resultMap id="BaseResultMap" type="com.student.bean.News" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_news
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.student.bean.News" >
+    insert into t_news (id, title, content, 
+      status, time)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.student.bean.News" >
+    update t_news
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      time = #{time,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, title, content, status, time
+    from t_news
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, title, content, status, time
+    from t_news
+  </select>
+  
+  
+  <insert id="saveNews" parameterType="com.student.bean.News" >
+    insert into t_news (title, content,time)
+    values ( #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+           #{time,jdbcType=VARCHAR})
+  </insert>
+  
+    <select id="queryPage" resultMap="BaseResultMap">
+  		 select id, title, content, status, time
+    		from t_news 
+    		<where>
+    			<if test="queryText != null">
+    				title like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+    		order by id desc 
+    		limit #{startIndex},#{pagesize}
+  	</select>
+  	
+  	<select id="queryCount" resultType="int">
+  		 select count(*) from t_news 
+  		 	<where>
+    			<if test="queryText != null">
+    				title like concat("%",#{queryText},"%")
+    			</if>
+    		</where>
+  	</select>
+  
+</mapper>
